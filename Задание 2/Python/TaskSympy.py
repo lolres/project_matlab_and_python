@@ -1,20 +1,41 @@
-from sympy import *
+п»їfrom sympy import *
 from sympy.abc import a, x, y
 import random
+from time import *
+
+def timer_func(func):
+    def wrap_func(*args, **kwargs):
+        t1 = time() # РІСЂРµРјСЏ РЅР° РЅР°С‡Р°Р»Рѕ РІС‹РїРѕР»РЅРµРЅРёСЏ С„СѓРЅРєС†РёРё
+        result = func(*args, **kwargs)
+        t2 = time() # РІСЂРµРјСЏ РЅР° РєРѕРЅРµС† РІС‹РїРѕР»РЅРµРЅРёСЏ С„СѓРЅРєС†РёРё
+        with open("time.txt", mode='a') as f:
+            f.write(f"{(t2-t1):.4f}s\n")
+        print(f"{(t2-t1):.4f}s")
+        return result
+    return wrap_func
+
+@timer_func
+def rand_integral(x, predel_1, predel_2):
+    result = (integ.subs(x, predel_2) - integ.subs(x, predel_1)).evalf() # СЂРµР·СѓР»СЊС‚Р°С‚ РІС‹С‡РёСЃР»СЏРµРј 
+    print(result)
+    return (str(result) + '\n') # РІРѕР·РІСЂР°С‰Р°РµРј СЂРµР·СѓР»СЊС‚Р°С‚ РІ РІРёРґРµ СЃС‚СЂРѕРєРё
 
 if __name__ == '__main__':
     x = symbols("x") 
     s = str()
-    a = random.randint(1, 100) # выбираем рандомно константы a и b
-    b = random.randint(1, 100) 
-    integ = integrate(1/x/sqrt(a*x+b), x) # вычисляем неопределённый интеграл
-    for i in range(100):
-        predel_1 = random.randint(1, 100) # на каждой итерации подставляем новые пределы
+    a = 54
+    b = 77
+    integ = integrate(1/x/sqrt(a*x+b), x) # РІС‹С‡РёСЃР»СЏРµРј РЅРµРѕРїСЂРµРґРµР»С‘РЅРЅС‹Р№ РёРЅС‚РµРіСЂР°Р»
+
+    predel_1 = 2 # 1С‹Р№ РѕРїСЂРµРґРµР»С‘РЅРЅС‹Р№ РёРЅС‚РµРіСЂР°Р» Сѓ РЅР°СЃ СЃРѕРІРїР°РґР°РµС‚ 
+    predel_2 = 10
+    s += rand_integral(x, predel_1, predel_2)
+
+    for i in range(1, 100):
+        predel_1 = random.randint(1, 100) # РЅР° РєР°Р¶РґРѕР№ РёС‚РµСЂР°С†РёРё РїРѕРґСЃС‚Р°РІР»СЏРµРј РЅРѕРІС‹Рµ РїСЂРµРґРµР»С‹
         predel_2 = random.randint(100, 200) 
-        result = (integ.subs(x, predel_2) - integ.subs(x, predel_1)).evalf() # результат вычисляем 
-        print(result)
-        s += (str(result) + '\n') # заносим результат в строку
+        s += rand_integral(x, predel_1, predel_2)
     with open("results.txt", mode="w") as f:
-        f.write(s) # записываем строку в файл
+        f.write(s) # Р·Р°РїРёСЃС‹РІР°РµРј СЃС‚СЂРѕРєСѓ РІ С„Р°Р№Р»
 
 
